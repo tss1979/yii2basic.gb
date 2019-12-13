@@ -57,6 +57,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+              '<action:(about|contact|login|index|)>' => 'site/<action>',
             ],
         ]
     ],

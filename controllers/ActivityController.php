@@ -34,14 +34,23 @@ class ActivityController extends Controller
     public function actionIndex($sort = false) {
 
         $query = Activity::find()->where(['author_id'=>Yii::$app->user->identity->getId()]);
-        $provider = new ActiveDataProvider([
+        $model = Activity::find()->where(['author_id'=>Yii::$app->user->identity->getId()]);
+        var_dump($model);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        /*$provider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'validatePage' => false,
                 'pageSize' => 5,
             ]
+        ]);*/
+        return $this->render('index', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
         ]);
-        return $this->render('index', ['provider' => $provider]);
+        //return $this->render('index', ['provider' => $provider, 'model' => $model]);
     }
 
     public function actionView(int $id) {

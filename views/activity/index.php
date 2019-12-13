@@ -1,93 +1,82 @@
 <?php
-use app\models\Activity;
-use yii\bootstrap\Html;
-use yii\bootstrap\ActiveForm;
-use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\grid\SerialColumn;
-use yii\grid\ActionColumn;
-/**
- * @var $this yii\web\View
- * @var \app\models\Activity[] $activities
- * @var $provider \yii\data\ActiveDataProvider
- *
- */
-/*
-<?php foreach ($activities as $item) { ?>
-   <div>
-        <h3><a href="/activity/view?id=<?=$item->id ?>">Название: <?= $item->title ?></a></h3>
-        <p>Описание события: <?= $item->description ?></p>
-        <p>Дата начала: <?= $item->dayStart ?></p>
-        <p>Дата окончания: <?= $item->dayEnd ?></p>
-        <p>Пользователь: <?= $item->userID ?></p>
-   </div>
-<?php } ?>
-*/
-$columns = [
-    [
-        'class' => SerialColumn::class,
-        'header' => 'Псевдо-порядковый класс',
-    ],
-    [
-        'label' => 'Порядковый номер',
-        'attribute' => 'id',
-    ],
-    'title',
-    'description',
-    'started_at:datetime',
-    'finished_at:datetime',
-    [
-        'label' => 'Имя пользователя',
-        'attribute' => 'id',
-        'value' => function (Activity $model)
-        {
-            return $model->user->username;
-        }
-    ],
-    'main:boolean',
-    'cycle:boolean',
-];
-if (Yii::$app->user->can('user')){
-    $columns[]=[
-        'class' => ActionColumn::class,
-        'header' => 'Операции',
-        'template' => '{view} {update} {delete} {update}',
-        'buttons' => [
-            'update' => function ($url, $model, $key){
-                return html::a('Custom', $url);
-            }
-        ],
-    ];
-}
+use app\models\User;
+/* @var $this yii\web\View */
+/* @var $model app\models\Activity */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+$this->title = 'Activities';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="activity-index">
 
-<h1>Список событий</h1>
+    <h1><?= Html::encode($this->title) ?></h1>
 
-
-
-<?= GridView::widget([
-    'dataProvider' => $provider,
-    'columns'=> $columns,
-])?>
+    <p>
+        <?= Html::a('Create Activity', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
 
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $model,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'id',
+            'title',
+            [
+                'attribute'=>'started_at',
+                'filter'=>\kartik\date\DatePicker::widget([
+                    'model'=>$model,
+                    'attribute'=>'started_at',
+                    'language'=>'ru',
+                    'pluginOptions'=>[
+                        'autoclose'=> true,
+                        'todayHighlight'=>true,
+                        'format'=>'dd.mm.yyyy',
+                    ],
+                ]),
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->started_at);
+                }
+
+            ],
+            [
+                'attribute'=>'finished_at',
+                'filter'=>\kartik\date\DatePicker::widget([
+                    'model'=>$model,
+                    'attribute'=>'finished_at',
+                    'language'=>'ru',
+                    'pluginOptions'=>[
+                        'autoclose'=> true,
+                        'todayHighlight'=>true,
+                        'format'=>'dd.mm.yyyy',
+                    ],
+                ]),
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->finished_at);
+                }
+
+            ],
+            /* [
+                    'attribute'=>'authorEmail',
+                    'format' => 'raw',
+                    'value'=>function(\app\models\User $model)
+                    {
+                        return Html::a($model->email, ['/user/view', 'id'=>$model->id]);
+                    }
+
+                ],*/
+            'author_id',
+            //'main',
+            //'cycle',
+            //'created_at',
+            //'updated_at',
+            ['class' => 'yii\grid\ActionColumn'],
+        ],
+    ]); ?>
 
 
-<?php $form = ActiveForm::begin([
-    'action' => './activity/create',
-])?>
-
-<p><?= Html::submitButton('Добавить событие', ['class' => 'btn btn-success']) ?></p>
-
-<?php ActiveForm::end()?>
-
-<?php $form = ActiveForm::begin([
-    'action' => './activity/update',
-])?>
-
-<p><?= Html::submitButton('Изменить событие', ['class' => 'btn btn-success']) ?></p>
-
-<?php ActiveForm::end()?>
-
-
-<p><?= Html::a('Вернуться в календарь', Url::to(['./calendar']) ) ?></p>
+</div>
