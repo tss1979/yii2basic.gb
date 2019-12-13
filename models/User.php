@@ -9,6 +9,7 @@ use app\components\behaviors\CacheBehavior;
  * @package app\models
  * @property int $id
  * @property string $username
+ * @property email $email
  * @property string $password_hash
  * @property string $auth_key
  * @property string $access_token
@@ -48,6 +49,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->id;
     }
+
 
     public function getAuthKey()
     {

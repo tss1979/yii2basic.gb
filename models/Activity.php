@@ -52,6 +52,7 @@ class Activity extends ActiveRecord
             'cycle' => 'Повторяемое событие',
             'main' => 'Блокирующее событие',
             'attachments' => 'Прикрепленные файлы',
+            'author_email'=>'Электронный адрес автора',
         ];
     }
     public function rules()
@@ -87,14 +88,14 @@ class Activity extends ActiveRecord
         return $this -> hasOne(User::class, ['id' => 'author_id']);
     }
 
-    public static function findOne($condition)
+   /* public static function findOne($condition)
     {
-        if (Yii::$app->cache->exists(self::class . '_' . $condition) === false) {
+        if (Yii::$app->cache->exists(self::className() . '_' . $condition) === false) {
             $result = parent::findOne($condition);
             Yii::$app->cache->set(self::class . '_' . $condition, $result);
             return $result;
         } else {
             return Yii::$app->cache->get(self::class . '_' . $condition);
         }
-    }
+    }*/
 }

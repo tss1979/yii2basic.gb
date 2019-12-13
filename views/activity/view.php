@@ -1,8 +1,11 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Activity */
+
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Activities', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -29,27 +32,51 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description',
-            'started_at:datetime',
             [
-                    'attribute'=>'finished_at',
-                    'label'=>'Дата и время окончания',
-                    'value'=>function(\app\models\Activity $model)
-                        {
-                             return Yii::$app->formatter->asDatetime($model->finished_at);
-                        }
+                'attribute'=>'started_at',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->started_at);
+                }
+            ],
+            [
+                'attribute'=>'finished_at',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->finished_at);
+                }
+            ],
+            'author_id',
+            [
+                'attribute'=>'main',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return $model->main ? 'Да' : 'Нет';
+                },
 
             ],
             [
-                    'attribute'=>'main',
-                    'value'=>function(\app\models\Activity $model)
-                        {
-                            return $model->main ? 'Да' : 'Нет';
-                        },
+                'attribute'=>'cycle',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return $model->cycle ? 'Да' : 'Нет';
+                },
 
             ],
-            'cycle:boolean',
-            'created_at:date',
-            'updated_at:date',
+            [
+                'attribute'=>'created_at',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->started_at);
+                }
+            ],
+            [
+                'attribute'=>'updated_at',
+                'value'=>function(\app\models\Activity $model)
+                {
+                    return Yii::$app->formatter->asDatetime($model->started_at);
+                }
+            ],
         ],
     ]) ?>
 

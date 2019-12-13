@@ -16,10 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Activity', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $model,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
@@ -27,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'started_at',
                 'filter'=>\kartik\date\DatePicker::widget([
-                    'model'=>$model,
+                    'model'=>$searchModel,
                     'attribute'=>'started_at',
                     'language'=>'ru',
                     'pluginOptions'=>[
@@ -36,16 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format'=>'dd.mm.yyyy',
                     ],
                 ]),
-                'value'=>function(\app\models\Activity $model)
+                'value'=>function(\app\models\Activity $searchModel)
                 {
-                    return Yii::$app->formatter->asDatetime($model->started_at);
+                    return Yii::$app->formatter->asDatetime($searchModel->started_at);
                 }
 
             ],
             [
                 'attribute'=>'finished_at',
                 'filter'=>\kartik\date\DatePicker::widget([
-                    'model'=>$model,
+                    'model'=>$searchModel,
                     'attribute'=>'finished_at',
                     'language'=>'ru',
                     'pluginOptions'=>[
@@ -54,21 +55,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format'=>'dd.mm.yyyy',
                     ],
                 ]),
-                'value'=>function(\app\models\Activity $model)
+                'value'=>function(\app\models\Activity $searchModel)
                 {
-                    return Yii::$app->formatter->asDatetime($model->finished_at);
+                    return Yii::$app->formatter->asDatetime($searchModel->finished_at);
                 }
 
             ],
-            /* [
-                    'attribute'=>'authorEmail',
+             [
+                    'attribute'=>'author_email',
                     'format' => 'raw',
-                    'value'=>function(\app\models\User $model)
+                    'value'=>function($searchModel)
                     {
-                        return Html::a($model->email, ['/user/view', 'id'=>$model->id]);
+                        $user = User::findOne($searchModel->author_id);
+                        return Html::a("$user->email", ['/user/view', 'id'=>$user->email]);
                     }
 
-                ],*/
+                ],
             'author_id',
             //'main',
             //'cycle',
