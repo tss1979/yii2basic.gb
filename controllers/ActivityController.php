@@ -8,6 +8,7 @@ use app\models\search\ActivitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ActivityController implements the CRUD actions for Activity model.
@@ -24,6 +25,16 @@ class ActivityController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'view', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];
@@ -84,15 +95,26 @@ class ActivityController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->identity->getId() === ($this->findModel($id))->author_id){
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $model = $this->findModel($id);
+
+            if ($model->load(Yii::$app->request->post())) {
+                $model->updated_at = date('php:d.m.Y H:i:s');
+                $model->started_at = Yii::$app->formatter->asDatetime($model->started_at, 'php:d.m.Y H:i:s');
+                $model->finished_at = Yii::$app->formatter->asDatetime($model->finished_at, 'php:d.m.Y H:i:s');
+                if ($model->save())
+                {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        throw new NotFoundHttpException('Изменить данные может только автор события');
     }
 
     /**
@@ -104,9 +126,13 @@ class ActivityController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(Yii::$app->user->identity->getId() === ($this->findModel($id))->author_id){
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }
+
+        throw new NotFoundHttpException('Удалить данные может только автор события');
     }
 
     /**

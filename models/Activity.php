@@ -62,8 +62,7 @@ class Activity extends ActiveRecord
             [['title', 'description'], 'string'],
             [['title'], 'string', 'min' => 2, 'max' => 160],
             [['description'], 'string', 'min'=> 5],
-            [['started_at', 'finished_at'], 'date', 'format' =>'php:Y-m-d'],
-            [['author_id'], 'integer'],
+            [['started_at', 'finished_at'], 'date', 'format' =>'php:d.m.Y H:i:s'],
             [['author_id'], 'default', 'value' => function(){
                 return \Yii::$app->user->identity->getId();
             }],
@@ -78,7 +77,7 @@ class Activity extends ActiveRecord
     public function checkDayEnd($strValue)
     {
         $dayStart = strtotime($this->started_at);
-        $dayEnd = strtotime($this->$strValue);
+        $dayEnd = strtotime($this->finished_at);
         if ($dayEnd < $dayStart) {
             $this->addError($strValue, 'Дата окончания события не может быть раньше даты его начала!');
         }

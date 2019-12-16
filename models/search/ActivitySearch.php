@@ -21,7 +21,7 @@ class ActivitySearch extends Activity
         return [
             [['id', 'author_id', 'main', 'cycle', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'safe'],
-            [['started_at', 'finished_at'], 'date', 'format' => 'php:d.m.Y'],
+            [['started_at', 'finished_at'], 'date', 'format' => 'php:d.m.Y H:i:s'],
         ];
     }
 
@@ -44,9 +44,7 @@ class ActivitySearch extends Activity
     public function search($params)
     {
 
-        if (!\Yii::$app->user->isGuest) {
-
-            $query = Activity::find()->andWhere(['author_id' =>\Yii::$app->user->identity->getId()]);
+            $query = Activity::find()->andWhere(['author_id' => \Yii::$app->user->identity->getId()]);
             // add conditions that should always apply here
 
             $dataProvider = new ActiveDataProvider([
@@ -71,15 +69,12 @@ class ActivitySearch extends Activity
                 'cycle' => $this->cycle,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
-            ])->andWhere(['author_id'=>\Yii::$app->user->identity->getId()]);
+            ])->andWhere(['author_id' => \Yii::$app->user->identity->getId()]);
 
             $query->andFilterWhere(['like', 'title', $this->title])
                 ->andFilterWhere(['like', 'description', $this->description]);
 
             return $dataProvider;
-        } else redirect('site/login');
-
 
     }
-
 }
