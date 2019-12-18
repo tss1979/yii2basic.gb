@@ -67,14 +67,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'created_at',
                 'value'=>function(\app\models\Activity $model)
                 {
-                    return Yii::$app->formatter->asDatetime($model->started_at);
+                    return Yii::$app->formatter->asDatetime($model->created_at);
                 }
             ],
             [
                 'attribute'=>'updated_at',
                 'value'=>function(\app\models\Activity $model)
                 {
-                    return Yii::$app->formatter->asDatetime($model->started_at);
+                    return Yii::$app->formatter->asDatetime($model->updated_at);
                 }
             ],
         ],

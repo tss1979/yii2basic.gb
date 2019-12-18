@@ -77,8 +77,17 @@ class ActivityController extends Controller
     {
         $model = new Activity();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->created_at = date('dd-mm-yyyy H:ii:ss');
+            $model->updated_at = date('dd-mm-yyyy H:ii:ss');
+            $model->started_at = Yii::$app->formatter->asTimestamp($model->started_at);
+            $model->finished_at = Yii::$app->formatter->asTimestamp($model->finished_at);
+
+           if($model->save()) {
+               return $this->redirect(['view', 'id' => $model->id]);
+           }
+            
         }
 
         return $this->render('create', [
@@ -100,9 +109,9 @@ class ActivityController extends Controller
             $model = $this->findModel($id);
 
             if ($model->load(Yii::$app->request->post())) {
-                $model->updated_at = date('php:d.m.Y H:i:s');
-                $model->started_at = Yii::$app->formatter->asDatetime($model->started_at, 'php:d.m.Y H:i:s');
-                $model->finished_at = Yii::$app->formatter->asDatetime($model->finished_at, 'php:d.m.Y H:i:s');
+                $model->updated_at = date('dd-mm-yyyy H:ii:ss');
+                    $model->started_at = Yii::$app->formatter->asTimestamp($model->started_at);
+                    $model->finished_at = Yii::$app->formatter->asTimestamp($model->finished_at);
                 if ($model->save())
                 {
                     return $this->redirect(['view', 'id' => $model->id]);

@@ -62,14 +62,11 @@ class Activity extends ActiveRecord
             [['title', 'description'], 'string'],
             [['title'], 'string', 'min' => 2, 'max' => 160],
             [['description'], 'string', 'min'=> 5],
-            [['started_at', 'finished_at'], 'date', 'format' =>'php:d.m.Y H:i:s'],
+            [['started_at', 'finished_at'], 'string'],
             [['author_id'], 'default', 'value' => function(){
                 return \Yii::$app->user->identity->getId();
             }],
             [['cycle', 'main'], 'boolean'],
-            ['finished_at', 'default', 'value' => function(){
-                return $this->started_at;
-            }],
             ['finished_at','checkDayEnd']
             //[['attachments'], 'file', 'maxFiles' => 5],
         ];
