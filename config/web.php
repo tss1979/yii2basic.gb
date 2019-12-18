@@ -6,6 +6,7 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'defaultRoute'=> ['\web\calendar'],
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -33,6 +34,13 @@ $config = [
             // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
+
+        'formatter'=>[
+            'dateFormat'=>'php:d.m.Y',
+            'datetimeFormat' => 'php:d.m.Y H:i:s',
+            'defaultTimeZone' => 'Europe/Moscow',
+        ],
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
